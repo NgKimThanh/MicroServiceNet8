@@ -1,0 +1,6 @@
+@MicroServiceNet8_HostAddress = http://localhost:5042
+
+GET {{MicroServiceNet8_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
