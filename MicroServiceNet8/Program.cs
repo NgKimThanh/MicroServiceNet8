@@ -20,12 +20,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Life cycle DI: AddSingleton(), AddTransient(), AddScoped()
-//builder.Services.AddScoped<IGroupOfProductService, GroupOfProductService>();
+#region Life cycle DI: AddSingleton(), AddTransient(), AddScoped()
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+#endregion Life cycle DI: AddSingleton(), AddTransient(), AddScoped()
 
 builder.Services.AddHttpContextAccessor();
 
