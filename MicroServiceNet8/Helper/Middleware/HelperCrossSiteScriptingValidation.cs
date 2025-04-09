@@ -1,4 +1,4 @@
-﻿namespace MicroServiceNet8.Helper.Middleware
+﻿namespace MicroServiceNet8.API.Helper.Middleware
 {
     public class HelperCrossSiteScriptingValidation
     {

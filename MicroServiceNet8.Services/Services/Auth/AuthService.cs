@@ -1,14 +1,14 @@
-﻿using AuthenNet8.Services.Token;
+﻿using AuthenNet8.Services.Services.Token;
 using MicroServiceNet8.DTO.Auth;
-using MicroServiceNet8.Entities.Repositories.Users.Interfaces;
 using MicroServiceNet8.Entities.SYS;
-using MicroServiceNet8.Helper;
+using MicroServiceNet8.Services.Helper;
+using MicroServiceNet8.Services.Repositories.Users.Interfaces;
 using MicroServiceNet8.Services.Services.Auth.Interfaces;
 using MicroServiceNet8.Services.Services.Email.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Security.Cryptography;
 
-namespace AuthenNet8.Services.Auth
+namespace AuthenNet8.Services.Services.Auth
 {
     public class AuthService : IAuthService
     {

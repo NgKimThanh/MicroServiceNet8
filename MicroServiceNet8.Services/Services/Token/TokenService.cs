@@ -6,7 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace AuthenNet8.Services.Token
+namespace AuthenNet8.Services.Services.Token
 {
     public class TokenService
     {

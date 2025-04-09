@@ -1,9 +1,9 @@
 ﻿using MicroServiceNet8.DTO.Common;
-using MicroServiceNet8.Helper;
+using MicroServiceNet8.Services.Helper;
 using System.Net;
 using System.ServiceModel;
 
-namespace AuthenNet8.Middleware
+namespace AuthenNet8.API.Middleware
 {
     public class ExceptionHandler
     {

@@ -1,10 +1,12 @@
 ﻿using MicroServiceNet8.DTO.Auth;
 using MicroServiceNet8.Services.Services.Auth.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AuthenNet8.Controllers
+namespace MicroServiceNet8.Services.API.Controllers.Auth
 {
-    [Route("api/[controller]")]
+    [Route("api/auth/[controller]")]
+    [Authorize]
     [ApiController]
     public class AuthController : ControllerBase
     {

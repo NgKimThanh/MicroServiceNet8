@@ -1,6 +1,6 @@
 ﻿using MicroServiceNet8.Entities.SYS;
 
-namespace MicroServiceNet8.Entities.Repositories.Users.Interfaces
+namespace MicroServiceNet8.Services.Repositories.Users.Interfaces
 {
     public interface IUserRepository
     {

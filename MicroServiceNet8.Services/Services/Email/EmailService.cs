@@ -3,7 +3,7 @@ using MicroServiceNet8.Services.Services.Email.Interfaces;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 
-namespace AuthenNet8.Services.Email
+namespace AuthenNet8.Services.Services.Email
 {
     public class EmailService : IEmailService
     {

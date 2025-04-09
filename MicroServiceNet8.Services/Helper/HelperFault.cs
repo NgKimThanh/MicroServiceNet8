@@ -1,7 +1,7 @@
 ﻿using MicroServiceNet8.DTO.Common;
 using System.ServiceModel;
 
-namespace MicroServiceNet8.Helper
+namespace MicroServiceNet8.Services.Helper
 {
     public class HelperFault
     {

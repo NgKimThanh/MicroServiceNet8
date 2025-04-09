@@ -1,8 +1,8 @@
-﻿using MicroServiceNet8.Helper.Middleware;
+﻿using MicroServiceNet8.API.Helper.Middleware;
 using Microsoft.IO;
 using System.Net;
 
-namespace AuthenNet8.Middleware
+namespace AuthenNet8.API.Middleware
 {
     public class AntiXssMiddleware
     {

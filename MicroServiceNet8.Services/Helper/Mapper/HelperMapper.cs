@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using MicroServiceNet8.Entities;
 
-namespace DemoWebApiDotNet6.Helper
+namespace MicroServiceNet8.Services.Helper.Mapper
 {
     public class HelperMapper : Profile
     {
