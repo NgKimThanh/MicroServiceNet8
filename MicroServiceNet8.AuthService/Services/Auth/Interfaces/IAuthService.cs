@@ -1,6 +1,6 @@
 ﻿using MicroServiceNet8.DTO.Auth;
 
-namespace MicroServiceNet8.Services.Services.Auth.Interfaces
+namespace MicroServiceNet8.Auth.Services.Auth.Interfaces
 {
     public interface IAuthService
     {

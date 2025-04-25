@@ -1,9 +1,9 @@
-﻿using MicroServiceNet8.Services.Repositories.Users.Interfaces;
-using MicroServiceNet8.Entities.SYS;
+﻿using MicroServiceNet8.Entities.SYS;
 using MicroServiceNet8.Entity.DBContext;
 using Microsoft.EntityFrameworkCore;
+using MicroServiceNet8.Repositories.Users.Interfaces;
 
-namespace AuthenNet8.Services.Repositories.Users
+namespace MicroServiceNet8.Repositories.Users
 {
     public class UserRepository : IUserRepository
     {

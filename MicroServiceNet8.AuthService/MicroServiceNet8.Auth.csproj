@@ -7,16 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="MailKit" Version="4.11.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
-    <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MicroServiceNet8.AuthService\MicroServiceNet8.Auth.csproj" />
     <ProjectReference Include="..\MicroServiceNet8.DTO\MicroServiceNet8.DTO.csproj" />
     <ProjectReference Include="..\MicroServiceNet8.Entity\MicroServiceNet8.Entities.csproj" />
+    <ProjectReference Include="..\MicroServiceNet8.HelperCommon\MicroServiceNet8.HelperCommon.csproj" />
+    <ProjectReference Include="..\MicroServiceNet8.Repositories\MicroServiceNet8.Repositories.csproj" />
   </ItemGroup>
 
 </Project>

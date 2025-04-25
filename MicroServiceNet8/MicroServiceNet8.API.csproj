@@ -30,8 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MicroServiceNet8.AuthService\MicroServiceNet8.Auth.csproj" />
     <ProjectReference Include="..\MicroServiceNet8.DTO\MicroServiceNet8.DTO.csproj" />
-    <ProjectReference Include="..\MicroServiceNet8.Entity\MicroServiceNet8.Entities.csproj" />
+    <ProjectReference Include="..\MicroServiceNet8.HelperCommon\MicroServiceNet8.HelperCommon.csproj" />
+    <ProjectReference Include="..\MicroServiceNet8.Repositories\MicroServiceNet8.Repositories.csproj" />
     <ProjectReference Include="..\MicroServiceNet8.Services\MicroServiceNet8.Services.csproj" />
   </ItemGroup>
 

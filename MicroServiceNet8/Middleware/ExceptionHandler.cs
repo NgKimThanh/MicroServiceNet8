@@ -1,5 +1,5 @@
 ﻿using MicroServiceNet8.DTO.Common;
-using MicroServiceNet8.Services.Helper;
+using MicroServiceNet8.HelperCommon.Fault.Helper;
 using System.Net;
 using System.ServiceModel;
 

@@ -1,13 +1,17 @@
 ﻿using AuthenNet8.API.Middleware;
-using AuthenNet8.Services.Repositories.Users;
-using AuthenNet8.Services.Services.Auth;
-using AuthenNet8.Services.Services.Email;
-using AuthenNet8.Services.Services.Token;
+using AuthenNet8.Auth.Services.Token;
+using MicroServiceNet8.API.Middleware;
+using MicroServiceNet8.Auth.Services.Auth;
+using MicroServiceNet8.Auth.Services.Auth.Interfaces;
+using MicroServiceNet8.Auth.Services.Email;
+using MicroServiceNet8.Auth.Services.Email.Interfaces;
+using MicroServiceNet8.Auth.Services.Google;
+using MicroServiceNet8.Auth.Services.User;
+using MicroServiceNet8.Auth.Services.User.Interfaces;
 using MicroServiceNet8.Entity.DBContext;
-using MicroServiceNet8.Services.Repositories.Users.Interfaces;
-using MicroServiceNet8.Services.Services.Auth.Interfaces;
-using MicroServiceNet8.Services.Services.Email.Interfaces;
-using MicroServiceNet8.Services.Services.Google;
+using MicroServiceNet8.Repositories.Users;
+using MicroServiceNet8.Repositories.Users.Interfaces;
+using MicroServiceNet8.Services.Services.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -21,7 +25,31 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+    // Cấu hình sử dụng Bearer Token
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "Nhập 'Bearer {token}' vào đây",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 #region Life cycle DI: AddSingleton(), AddTransient(), AddScoped()
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -29,6 +57,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<GoogleLoginService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 #endregion Life cycle DI: AddSingleton(), AddTransient(), AddScoped()
 
 builder.Services.AddHttpContextAccessor();
@@ -95,6 +125,8 @@ app.UseHttpsRedirection();
 #region Middleware
 // Anti XSS
 app.UseMiddleware<AntiXssMiddleware>();
+// Xác thực JWT token & gán ClaimsPrincipal vào HttpContext.User
+app.UseMiddleware<JwtMiddleware>();
 // Exception Handler
 app.UseMiddleware<ExceptionHandler>();
 #endregion Middleware

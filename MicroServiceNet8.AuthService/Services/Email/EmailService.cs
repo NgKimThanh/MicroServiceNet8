@@ -1,9 +1,9 @@
 ﻿using MailKit.Net.Smtp;
-using MicroServiceNet8.Services.Services.Email.Interfaces;
+using MicroServiceNet8.Auth.Services.Email.Interfaces;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 
-namespace AuthenNet8.Services.Services.Email
+namespace MicroServiceNet8.Auth.Services.Email
 {
     public class EmailService : IEmailService
     {

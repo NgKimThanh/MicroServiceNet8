@@ -1,14 +1,14 @@
-﻿using AuthenNet8.Services.Services.Token;
+﻿using AuthenNet8.Auth.Services.Token;
+using MicroServiceNet8.Auth.Services.Auth.Interfaces;
+using MicroServiceNet8.Auth.Services.Email.Interfaces;
 using MicroServiceNet8.DTO.Auth;
 using MicroServiceNet8.Entities.SYS;
-using MicroServiceNet8.Services.Helper;
-using MicroServiceNet8.Services.Repositories.Users.Interfaces;
-using MicroServiceNet8.Services.Services.Auth.Interfaces;
-using MicroServiceNet8.Services.Services.Email.Interfaces;
+using MicroServiceNet8.HelperCommon.Fault.Helper;
+using MicroServiceNet8.Repositories.Users.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Security.Cryptography;
 
-namespace AuthenNet8.Services.Services.Auth
+namespace MicroServiceNet8.Auth.Services.Auth
 {
     public class AuthService : IAuthService
     {
@@ -30,12 +30,11 @@ namespace AuthenNet8.Services.Services.Auth
 
         private void SetRefreshToken(RefreshToken refreshToken, int userID)
         {
-            var cookieOptions = new CookieOptions
+            _httpContextAccessor.HttpContext!.Response.Cookies.Append("refreshToken", refreshToken.Token, new CookieOptions
             {
                 HttpOnly = true,
                 Expires = refreshToken.Expires
-            };
-            _httpContextAccessor.HttpContext!.Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+            });
             _httpContextAccessor.HttpContext!.Response.Cookies.Append("userID", userID.ToString(), new CookieOptions
             {
                 HttpOnly = true,

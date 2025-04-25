@@ -1,8 +1,8 @@
 ﻿using MicroServiceNet8.Entities.SYS;
-using MicroServiceNet8.Services.Repositories.Users.Interfaces;
+using MicroServiceNet8.Repositories.Users.Interfaces;
 using System.Security.Claims;
 
-namespace MicroServiceNet8.Services.Services.Google
+namespace MicroServiceNet8.Auth.Services.Google
 {
     public class GoogleLoginService
     {

@@ -1,4 +1,4 @@
-﻿namespace MicroServiceNet8.Services.Services.Email.Interfaces
+﻿namespace MicroServiceNet8.Auth.Services.Email.Interfaces
 {
     public interface IEmailService
     {

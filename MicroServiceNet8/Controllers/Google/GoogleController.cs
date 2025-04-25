@@ -1,4 +1,4 @@
-﻿using MicroServiceNet8.Services.Services.Google;
+﻿using MicroServiceNet8.Auth.Services.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
