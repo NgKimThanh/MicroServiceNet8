@@ -30,10 +30,6 @@ namespace MicroServiceNet8.API.Middleware
                 {
                     context.User = principal; // Gắn ClaimsPrincipal vào HttpContext
                 }
-                else
-                {
-                    context.User = null;
-                }
             }
 
             await _next(context);
@@ -51,22 +47,23 @@ namespace MicroServiceNet8.API.Middleware
 
             var parameters = new TokenValidationParameters
             {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
+                ValidateIssuer = true, // Kiểm tra iss claim trong token phải trùng với cấu hình (Jwt:Issuer)
+                ValidateAudience = true, // Kiểm tra aud claim trong token phải đúng (Jwt:Audience)
+                ValidateLifetime = true, //  Kiểm tra token có hết hạn chưa
+                ValidateIssuerSigningKey = true, // Xác minh token có đúng chữ ký không
 
                 ValidIssuer = _config["Jwt:Issuer"],
                 ValidAudience = _config["Jwt:Audience"],
                 IssuerSigningKey = new SymmetricSecurityKey(key),
 
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.Zero // Không cho phép chênh lệch thời gian (mặc định .NET cho phép lệch ±5 phút)
             };
 
             try
             {
                 var principal = tokenHandler.ValidateToken(token, parameters, out SecurityToken validatedToken);
 
+                // Kiểm tra lại Algorithm, Đảm bảo token được ký bằng thuật toán HmacSha512Signature
                 if (validatedToken is JwtSecurityToken jwtToken &&
                    jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512Signature, StringComparison.InvariantCultureIgnoreCase))
                 {

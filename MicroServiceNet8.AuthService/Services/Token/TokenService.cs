@@ -17,6 +17,11 @@ namespace AuthenNet8.Auth.Services.Token
             _config = config;
         }
 
+        /// <summary>
+        /// Tạo Access Token, thời gian sống 1 ngày
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public string CreateToken(SYS_User user)
         {
             var claims = new List<Claim>
@@ -24,9 +29,8 @@ namespace AuthenNet8.Auth.Services.Token
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()),
+                new Claim(_config["Jwt:NameId"], user.ID.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.ID.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["AppSettings:SecretKey"]));
@@ -43,13 +47,17 @@ namespace AuthenNet8.Auth.Services.Token
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        /// <summary>
+        /// Tạo Refresh Token, thời gian sống 7 ngày
+        /// </summary>
+        /// <returns></returns>
         public RefreshToken GenerateRefreshToken()
         {
             return new RefreshToken
             {
                 Token = $"{Guid.NewGuid():N}{Guid.NewGuid():N}",
                 Created = DateTime.UtcNow,
-                Expires = DateTime.UtcNow.AddDays(7)
+                Expires = DateTime.UtcNow.AddDays(7), // 7 ngày
             };
         }
     }

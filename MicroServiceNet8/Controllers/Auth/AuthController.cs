@@ -1,7 +1,7 @@
 ﻿using MicroServiceNet8.Auth.Services.Auth.Interfaces;
-using MicroServiceNet8.Auth.Services.Google;
 using MicroServiceNet8.DTO.Auth;
 using MicroServiceNet8.Services.Services.User;
+using MicroServiceNet8.Services.Services.User.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,9 +13,9 @@ namespace MicroServiceNet8.Services.API.Controllers.Auth
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
 
-        public AuthController(IAuthService authService, UserService userService)
+        public AuthController(IAuthService authService, IUserService userService)
         {
             _authService = authService;
             _userService = userService;
@@ -76,11 +76,17 @@ namespace MicroServiceNet8.Services.API.Controllers.Auth
         }
         #endregion Quên mật khẩu
 
-        [HttpPost("get-current-user")]
-        public async Task<IActionResult> Auth_GetCurrentUser()
+        [HttpGet("get-current-user")]
+        public IActionResult Auth_GetCurrentUser()
         {
-            var s = _userService.GetCurrentUser();
-            return Ok();
+            var user = _userService.GetCurrentUserFromHttpContextUser();
+            return Ok(new
+            {
+                message = "Ok",
+                id = user.ID,
+                email = user.Email,
+                fullName = $"{user.FirstName} {user.LastName}"
+            });
         }
     }
 }

@@ -12,11 +12,14 @@ using MicroServiceNet8.Entity.DBContext;
 using MicroServiceNet8.Repositories.Users;
 using MicroServiceNet8.Repositories.Users.Interfaces;
 using MicroServiceNet8.Services.Services.User;
+using MicroServiceNet8.Services.Services.User.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using System.IdentityModel.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,7 +60,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<GoogleLoginService>();
-builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 #endregion Life cycle DI: AddSingleton(), AddTransient(), AddScoped()
 
@@ -102,11 +105,27 @@ builder.Services.AddAuthentication(options =>
     options.Audience = builder.Configuration["Jwt:Audience"];
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true, // Bắt buộc token phải đến từ https://accounts.google.com
-        ValidIssuer = "https://accounts.google.com", 
-        ValidateAudience = true, // Bắt buộc aud trong token phải đúng với Audience bạn khai báo
+        ValidateIssuer = true, // Kiểm tra iss claim trong token phải trùng với cấu hình (Jwt:Issuer)
+        NameClaimType = builder.Configuration["Jwt:NameId"],
+        //ValidIssuer = "https://accounts.google.com", 
+        ValidateAudience = true, // Kiểm tra aud claim trong token phải đúng (Jwt:Audience)
         ValidateLifetime = true, // Không chấp nhận token đã hết hạn
-        ValidateIssuerSigningKey = true // Kiểm tra chữ ký token có hợp lệ không (Google sẽ cung cấp public key để kiểm chứng)
+        ValidateIssuerSigningKey = true, // Xác minh token có đúng chữ ký không
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:SecretKey"])),
+        ClockSkew = TimeSpan.Zero
+    };
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            if (string.IsNullOrEmpty(context.Token))
+            {
+                context.Token = context.Request.Cookies["accessToken"];
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 #endregion Cấu hình xác thực JWT Bearer với Google - xác thực token đăng nhập Google được client (frontend, mobile app, Postman…) gửi lên
@@ -125,13 +144,16 @@ app.UseHttpsRedirection();
 #region Middleware
 // Anti XSS
 app.UseMiddleware<AntiXssMiddleware>();
-// Xác thực JWT token & gán ClaimsPrincipal vào HttpContext.User
-app.UseMiddleware<JwtMiddleware>();
+// Custom xác thực JWT token & gán ClaimsPrincipal vào HttpContext.User
+//app.UseMiddleware<JwtMiddleware>();
 // Exception Handler
 app.UseMiddleware<ExceptionHandler>();
 #endregion Middleware
 
-// Ánh xạ các route vào Controller
+// Nếu dùng UseAuthentication() thì không cần middleware JwtMiddleware vì UseAuthentication() đã tự động gán ClaimsPrincipal vào HttpContext.User
+// Authen là xác thực danh tính từ token
+app.UseAuthentication();
+// Author dùng xác thực quyền của user từ HttpContext.User sau khi pass Authen
 app.UseAuthorization();
 
 app.MapControllers();

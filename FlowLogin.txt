@@ -1,0 +1,12 @@
+sequenceDiagram
+Client ->> Server: POST /login (email + password)
+Server -->> Client: Set-Cookie (refreshToken, userID) + return accessToken (JWT)
+
+Client -->> Server: Gọi API (Bearer accessToken)
+
+alt accessToken hết hạn
+    Client ->> Server: POST /refresh-token
+    Server -->> Client: Set-Cookie (refreshToken mới) + return accessToken mới
+end
+
+Client -->> Server: Gọi API (Bearer accessToken mới)
