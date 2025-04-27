@@ -1,4 +1,5 @@
-﻿using MicroServiceNet8.Auth.Services.User.Interfaces;
+﻿using MicroServiceNet8.Auth.Services.Token.Interfaces;
+using MicroServiceNet8.Auth.Services.User.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
@@ -8,17 +9,19 @@ namespace MicroServiceNet8.Auth.Services.User
     public class CurrentUser : ICurrentUser
     {
         private readonly IHttpContextAccessor _context;
-        private readonly IConfiguration _config;
+        private readonly ITokenService _tokenService;
 
-        public CurrentUser(IHttpContextAccessor context, IConfiguration config)
+        public CurrentUser(IHttpContextAccessor context, 
+            ITokenService tokenService
+        )
         {
             _context = context;
-            _config = config;
+            _tokenService = tokenService;
         }
 
         private ClaimsPrincipal? User => _context.HttpContext?.User;
 
-        public int UserID => int.TryParse(User?.FindFirst(_config["Jwt:NameId"])?.Value, out var id) ? 
+        public int UserID => int.TryParse(User?.FindFirst(_tokenService.GetClaimTypeId())?.Value, out var id) ? 
             id : 
             -1;
         public string? Email => User?.FindFirst(ClaimTypes.Email)?.Value;

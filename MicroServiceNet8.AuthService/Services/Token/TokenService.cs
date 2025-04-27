@@ -1,4 +1,5 @@
-﻿using MicroServiceNet8.DTO.Auth;
+﻿using MicroServiceNet8.Auth.Services.Token.Interfaces;
+using MicroServiceNet8.DTO.Auth;
 using MicroServiceNet8.Entities.SYS;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -8,14 +9,20 @@ using System.Text;
 
 namespace AuthenNet8.Auth.Services.Token
 {
-    public class TokenService
+    public class TokenService : ITokenService
     {
         private readonly IConfiguration _config;
+        private readonly string _secretKey;
+        private readonly string claimTypeId;
 
         public TokenService(IConfiguration config)
         {
             _config = config;
+            claimTypeId = config["Jwt:userID"] ?? "userID";
+            _secretKey = _config["AppSettings:SecretKey"] ?? string.Empty;
         }
+
+        public string GetClaimTypeId() => claimTypeId;
 
         /// <summary>
         /// Tạo Access Token, thời gian sống 1 ngày
@@ -29,11 +36,11 @@ namespace AuthenNet8.Auth.Services.Token
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(_config["Jwt:NameId"], user.ID.ToString()),
+                new Claim(claimTypeId, user.ID.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["AppSettings:SecretKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var token = new JwtSecurityToken(

@@ -1,6 +1,7 @@
 ﻿using AuthenNet8.Auth.Services.Token;
 using MicroServiceNet8.Auth.Services.Auth.Interfaces;
 using MicroServiceNet8.Auth.Services.Email.Interfaces;
+using MicroServiceNet8.Auth.Services.Token.Interfaces;
 using MicroServiceNet8.DTO.Auth;
 using MicroServiceNet8.Entities.SYS;
 using MicroServiceNet8.HelperCommon.Fault.Helper;
@@ -14,12 +15,12 @@ namespace MicroServiceNet8.Auth.Services.Auth
     {
         private readonly IUserRepository _userRepo;
         private readonly IEmailService _emailService;
-        private readonly TokenService _tokenService;
+        private readonly ITokenService _tokenService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AuthService(IUserRepository userRepo,
             IEmailService emailService,
-            TokenService tokenService,
+            ITokenService tokenService,
             IHttpContextAccessor httpContextAccessor)
         {
             _userRepo = userRepo;
